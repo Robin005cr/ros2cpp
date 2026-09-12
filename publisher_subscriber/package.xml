@@ -1,0 +1,5 @@
+<description>Examples of minimal publisher/subscriber using rclcpp</description>
+<maintainer email="robinchovallurraju@gmail.com">Robin CR</maintainer>
+<license>Apache License 2.0</license>
+<depend>rclcpp</depend>
+<depend>std_msgs</depend>

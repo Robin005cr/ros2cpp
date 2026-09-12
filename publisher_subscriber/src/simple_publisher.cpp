@@ -14,19 +14,34 @@
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp> // interface type should be included
 
-class SimplePublisher : public rclcpp::Node // This node should be inherited creation of Node 
+class SimplePublisher : public rclcpp::Node // This node should be inherited creation of Node
 {
 public:
-    SimplePublisher() : Node("Simple_Publisher") // Name of the node
+    SimplePublisher() : Node("Simple_Publisher"), counter_(0) // Name of the node
     {
+        publisher_ = this->create_publisher<std_msgs::msg::String>("topic", 10);
+        timer_ = this->create_wall_timer(
+            500ms, std::bind(&MinimalPublisher::timer_callback, this));
     }
 
 private:
-    unsigned int counter; // count the no. of messages published in ros2 topic
+    void timer_callback()
+    {
+        auto message = std_msgs::msg::String();
+        message.data = "Hello, world! " + std::to_string(count_++);
+        RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
+        publisher_->publish(message);
+    }
+    rclcpp::TimerBase::SharedPtr timer_;
+    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
+    unsigned int counter_; // count the no. of messages published in ros2 topic
 };
 
 int main()
 {
-
+    rclcpp::init(argc, argv);
+    rclcpp::spin(std::make_shared<MinimalPublisher>());
+    rclcpp::shutdown();
+    return 0;
     return 0;
 }
