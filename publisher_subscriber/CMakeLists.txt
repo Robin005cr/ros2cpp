@@ -20,4 +20,12 @@ install(TARGETS
   talker
   DESTINATION lib/${PROJECT_NAME})
 
+add_executable(listener src/simple_subscriber.cpp)
+ament_target_dependencies(listener rclcpp std_msgs)
+
+install(TARGETS
+  talker
+  listener
+  DESTINATION lib/${PROJECT_NAME})
+
 ament_package()
